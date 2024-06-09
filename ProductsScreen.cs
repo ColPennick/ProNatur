@@ -38,7 +38,7 @@ namespace ProNatur_Biomarkt_GmbH
 
         private void btnProductSave_Click(object sender, EventArgs e)
         {
-            string productName = textBoxProductName.Text;
+            string productName = textBoxProductName.Text;                                  // get productName from textBoxProductName
             // save productName in database
         }
 
@@ -50,10 +50,12 @@ namespace ProNatur_Biomarkt_GmbH
         private void btnProductClear_Click(object sender, EventArgs e)
         {
 
+
         }
 
         private void btnProductDelete_Click(object sender, EventArgs e)
         {
+            
 
         }
     }
