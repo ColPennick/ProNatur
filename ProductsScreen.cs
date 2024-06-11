@@ -11,22 +11,123 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ProNatur_Biomarkt_GmbH
-{
+{   
     public partial class ProductsScreen : Form
     {
+        private int lastSelectedProductKey;
         // SQL connection to database
         private SqlConnection databaseConnection = new SqlConnection(@"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename=C:\Users\k2lu\OneDrive\Dokumente\ProNatur Biomarkt GmbH.mdf;Integrated Security = True; Connect Timeout = 30");
         
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProductsScreen"/> class.
+        /// </summary>
         public ProductsScreen()
         {
             InitializeComponent();
-            
-            //Start
+            ShowProducts();
+        }
+
+        /// <summary>
+        /// Handles the click event of the save button to save the product details.
+        /// </summary>
+        /// <param name="sender">The object that raised the event.</param>
+        /// <param name="e">The event arguments.</param>
+        private void btnProductSave_Click(object sender, EventArgs e)
+        {
+            ValidateInput();
+
+            // get values from text boxes and combo boxes
+            string productName = textBoxProductName.Text;
+            string productBrand = textBoxProductBrand.Text;
+            string productCategory = comboBoxProductCategory.Text;
+            string productPrice = textBoxProductPrice.Text;
+
+            // SQL query to insert new product into database
+            string query = string.Format("INSERT INTO Products VALUES ('{0}', '{1}', '{2}', '{3}')", productName, productBrand, productCategory, productPrice);
+            ExecuteQuery(query);
+
+            ClearAllFields();
+            ShowProducts();
+        }
+
+        /// <summary>
+        /// Handles the click event of the edit button to edit the selected product details in the database.
+        /// </summary>
+        /// <param name="sender">The object that raised the event.</param>
+        /// <param name="e">The event arguments.</param>
+        private void btnProductEdit_Click(object sender, EventArgs e)
+        {
+            if (lastSelectedProductKey == 0) // No product selected, so we can't delete anything
+            {
+                MessageBox.Show("Bitte wählen Sie ein Produkt aus, das Sie löschen möchten.");
+                return;
+            }
+            // get values from text boxes and combo boxes
+            string productName = textBoxProductName.Text;
+            string productBrand = textBoxProductBrand.Text;
+            string productCategory = comboBoxProductCategory.Text;
+            string productPrice = textBoxProductPrice.Text;
+
+            // SQL query to update product in database
+            string query = string.Format("UPDATE Products SET Name='{0}', Brand='{1}', Category='{2}', Price='{3}' WHERE Id={4}",
+                productName, productBrand, productCategory, productPrice, lastSelectedProductKey);
+            ExecuteQuery(query);
+
+            ShowProducts();
+        }
+
+        /// <summary>
+        /// Handles the click event of the clear button to clear all text boxes and combo boxes on the form.
+        /// </summary>
+        /// <param name="sender">The object that raised the event.</param>
+        /// <param name="e">The event arguments.</param>
+        private void btnProductClear_Click(object sender, EventArgs e)
+        {
+            ClearAllFields();
+        }
+
+        /// <summary>
+        /// Handles the click event of the delete button to delete the selected product from the database.
+        /// </summary>
+        /// <param name="sender">The object that raised the event.</param>
+        /// <param name="e">The event arguments.</param>
+        private void btnProductDelete_Click(object sender, EventArgs e)
+        {
+            if (lastSelectedProductKey == 0) // No product selected, so we can't delete anything
+            {
+                MessageBox.Show("Bitte wählen Sie ein Produkt aus, das Sie löschen möchten.");
+                return;
+            }
+            // SQL query to delete product from database
+            string query = string.Format("DELETE FROM Products WHERE Id={0}", lastSelectedProductKey);
+            ExecuteQuery(query);
+
+            ClearAllFields();
+            ShowProducts();
+        }
+
+        /// <summary>
+        /// Executes the specified SQL query on the database.
+        /// </summary>
+        /// <param name="query">The SQL query to execute.</param>
+        private void ExecuteQuery(string query)
+        {
+            databaseConnection.Open();                                                      // OPEN database connection, NEVER forget to Close() it at some point
+            SqlCommand sqlCommand = new SqlCommand(query, databaseConnection);              // create SQL command with query and database connection
+            sqlCommand.ExecuteNonQuery();                                                   // execute query
+            databaseConnection.Close();                                                     // CLOSE database connection
+        }
+
+        /// <summary>
+        /// Retrieves and displays all products from the database.
+        /// </summary>
+        private void ShowProducts()
+        {
             databaseConnection.Open();                                                      // OPEN database connection, NEVER forget to Close() it at some point
 
             string query = "SELECT * FROM Products";                                        // SQL query to get all products from database
             SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(query, databaseConnection);  // create data adapter
-            
+
             DataSet dataSet = new DataSet();                                                // create data set
             sqlDataAdapter.Fill(dataSet);                                                   // fill data set with data from data adapter
 
@@ -36,27 +137,54 @@ namespace ProNatur_Biomarkt_GmbH
             databaseConnection.Close();                                                     // CLOSE database connection
         }
 
-        private void btnProductSave_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Clears all text boxes and combo boxes on the form.
+        /// </summary>
+        /// <param name="sender">The object that raised the event.</param>
+        /// <param name="e">The event arguments.</param>
+        private void ClearAllFields()
         {
-            string productName = textBoxProductName.Text;                                  // get productName from textBoxProductName
-            // save productName in database
+            textBoxProductName.Text = "";
+            textBoxProductBrand.Text = "";
+            textBoxProductPrice.Text = "";
+            comboBoxProductCategory.Text = "";
+            comboBoxProductCategory.SelectedItem = null;
         }
 
-        private void btnProductEdit_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Validates the input fields to check if any field is empty.
+        /// </summary>
+        private void ValidateInput()
         {
-
+            if (textBoxProductName.Text == "" ||
+                textBoxProductBrand.Text == "" ||
+                textBoxProductPrice.Text == "" ||
+                comboBoxProductCategory.Text == "")
+            {
+                MessageBox.Show("Bitte geben alle Felder ausfüllen.");                      // show message box
+                return;                                                                     // return from method
+            }
         }
 
-        private void btnProductClear_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Handles the click event of the products data grid view to populate the text boxes and combo boxes with the selected product details. Also saves the key of the selected product.
+        /// </summary>
+        /// <param name="sender">The object that raised the event.</param>
+        /// <param name="e">The event arguments.</param>
+        private void productsDGV_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+            // MultiSelect is disabled and FullRowSelect is enabled in the designer,
+            // so we can safely assume that the first selected row is the one we want to edit.
+            // ReadOnly is enabled for all columns in the designer, so we can safely assume
+            // that the user can't edit the data in the DGV.
 
-
-        }
-
-        private void btnProductDelete_Click(object sender, EventArgs e)
-        {
-            
-
+            // Populate the text boxes and combo boxes with the selected product details
+            textBoxProductName.Text = productsDGV.SelectedRows[0].Cells[1].Value.ToString();
+            textBoxProductBrand.Text = productsDGV.SelectedRows[0].Cells[2].Value.ToString();
+            comboBoxProductCategory.Text = productsDGV.SelectedRows[0].Cells[3].Value.ToString();
+            textBoxProductPrice.Text = productsDGV.SelectedRows[0].Cells[4].Value.ToString();
+            // Save the key of the selected product
+            lastSelectedProductKey = (int)productsDGV.SelectedRows[0].Cells[0].Value;
         }
     }
 }
