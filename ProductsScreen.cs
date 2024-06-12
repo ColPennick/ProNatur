@@ -10,14 +10,27 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+/*
+    ToDo: 
+    - Add a new form BillsScreen.cs (basically the same but with customerId(primary key), customerName, productId(foreign key), productName, productPrice, productAmount, totalPrice, billDate)
+    - Make full row select in the DataGridView (now only productName text in DGV rows 0 are clickable)
+    - Add a new table in the database for bills (customerId, customerName, productId, productName, productPrice, productAmount, totalPrice, billDate)
+    - Add a new table in the database for customers (customerId, customerName, customerAddress, customerEmail, customerPhone)
+    - In the loading screen, add file selection dialogue / form to load a database and save the selection so user won't have to select the database every time (but can change it)
+    - replace the database connection string (the path part of filename) with a variable that is set in the loading screen
+ */
+
+
 namespace ProNatur_Biomarkt_GmbH
 {   
     public partial class ProductsScreen : Form
     {
-        private int lastSelectedProductKey;
         // SQL connection to database
-        private SqlConnection databaseConnection = new SqlConnection(@"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename=C:\Users\k2lu\OneDrive\Dokumente\ProNatur Biomarkt GmbH.mdf;Integrated Security = True; Connect Timeout = 30");
-        
+        private SqlConnection databaseConnection = new SqlConnection(@"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename=C:\Users\k2lu\OneDrive\Dokumente\Pro-Natur Biomarkt GmbH.mdf;Integrated Security = True; Connect Timeout = 30");
+
+        private int lastSelectedProductKey;
+
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ProductsScreen"/> class.
         /// </summary>
