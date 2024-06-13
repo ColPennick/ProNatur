@@ -58,6 +58,7 @@
             this.btnBill.TabIndex = 1;
             this.btnBill.Text = "Rechnung stellen";
             this.btnBill.UseVisualStyleBackColor = true;
+            this.btnBill.Click += new System.EventHandler(this.btnBill_Click);
             // 
             // MainMenuScreen
             // 
@@ -67,7 +68,7 @@
             this.ClientSize = new System.Drawing.Size(596, 150);
             this.Controls.Add(this.btnBill);
             this.Controls.Add(this.btnProducts);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "MainMenuScreen";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Hauptmenü";

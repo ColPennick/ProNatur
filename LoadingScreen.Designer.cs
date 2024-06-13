@@ -41,7 +41,7 @@
             resources.ApplyResources(this.loadingProgressbar, "loadingProgressbar");
             this.loadingProgressbar.Cursor = System.Windows.Forms.Cursors.Default;
             this.loadingProgressbar.ForeColor = System.Drawing.Color.Lime;
-            this.loadingProgressbar.MarqueeAnimationSpeed = 1000;
+            this.loadingProgressbar.Maximum = 25;
             this.loadingProgressbar.Name = "loadingProgressbar";
             // 
             // label1

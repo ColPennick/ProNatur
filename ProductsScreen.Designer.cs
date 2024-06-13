@@ -41,6 +41,7 @@
             this.btnProductClear = new System.Windows.Forms.Button();
             this.btnProductDelete = new System.Windows.Forms.Button();
             this.productsDGV = new System.Windows.Forms.DataGridView();
+            this.textBoxDbPath = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.productsDGV)).BeginInit();
             this.SuspendLayout();
             // 
@@ -211,6 +212,7 @@
             this.productsDGV.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.productsDGV.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             this.productsDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.productsDGV.ColumnHeadersVisible = false;
             this.productsDGV.Location = new System.Drawing.Point(12, 156);
             this.productsDGV.MultiSelect = false;
             this.productsDGV.Name = "productsDGV";
@@ -224,12 +226,26 @@
             this.productsDGV.TabIndex = 13;
             this.productsDGV.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.productsDGV_CellContentClick);
             // 
+            // textBoxDbPath
+            // 
+            this.textBoxDbPath.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
+            this.textBoxDbPath.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBoxDbPath.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxDbPath.ForeColor = System.Drawing.Color.White;
+            this.textBoxDbPath.Location = new System.Drawing.Point(333, 9);
+            this.textBoxDbPath.MaxLength = 255;
+            this.textBoxDbPath.Name = "textBoxDbPath";
+            this.textBoxDbPath.ReadOnly = true;
+            this.textBoxDbPath.Size = new System.Drawing.Size(454, 13);
+            this.textBoxDbPath.TabIndex = 19;
+            // 
             // ProductsScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::ProNatur_Biomarkt_GmbH.Properties.Resources.ImgBgProducts;
             this.ClientSize = new System.Drawing.Size(799, 461);
+            this.Controls.Add(this.textBoxDbPath);
             this.Controls.Add(this.productsDGV);
             this.Controls.Add(this.btnProductDelete);
             this.Controls.Add(this.btnProductClear);
@@ -269,5 +285,6 @@
         private System.Windows.Forms.Button btnProductClear;
         private System.Windows.Forms.Button btnProductDelete;
         private System.Windows.Forms.DataGridView productsDGV;
+        private System.Windows.Forms.TextBox textBoxDbPath;
     }
 }
