@@ -9,7 +9,7 @@ namespace ProNatur_Biomarkt_GmbH
     internal static class Program
     {
         /// <summary>
-        /// Der Haupteinstiegspunkt für die Anwendung.
+        /// The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main()
@@ -17,10 +17,11 @@ namespace ProNatur_Biomarkt_GmbH
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            //Application.Run(new LoadingScreen()); 
+            Application.Run(new LoadingScreen());    // GUI and app entry point, fake loading screen
             //Application.Run(new MainMenuScreen());   // debug switch
-            Application.Run(new ProductsScreen());   // debug switch
+            //Application.Run(new ProductsScreen());   // debug switch
+            //Application.Run(new BillsScreen());      // debug switch
         }
-       
+
     }
 }

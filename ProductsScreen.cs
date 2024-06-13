@@ -14,7 +14,7 @@ using System.Windows.Forms;
     ToDo: 
     - Add a new form BillsScreen.cs (basically the same but with customerId(primary key), customerName, productId(foreign key), productName, productPrice, productAmount, totalPrice, billDate)
     - Make full row select in the DataGridView (now only productName text in DGV rows 0 are clickable)
-    - Add a new table in the database for bills (customerId, customerName, productId, productName, productPrice, productAmount, totalPrice, billDate)
+    - Add a new table in the database for bills (customerId, customerName, productId, totalPrice, billDate)
     - Add a new table in the database for customers (customerId, customerName, customerAddress, customerEmail, customerPhone)
     - In the loading screen, add file selection dialogue / form to load a database and save the selection so user won't have to select the database every time (but can change it)
     - replace the database connection string (the path part of filename) with a variable that is set in the loading screen
@@ -25,11 +25,14 @@ namespace ProNatur_Biomarkt_GmbH
 {   
     public partial class ProductsScreen : Form
     {
-        // SQL connection to database
-        private SqlConnection databaseConnection = new SqlConnection(@"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename=C:\Users\k2lu\OneDrive\Dokumente\Pro-Natur Biomarkt GmbH.mdf;Integrated Security = True; Connect Timeout = 30");
+        // Path to the database file
+        private string databasePath = @"D:\PinkPixl\source\ProNatur-Biomarkt GmbH\Pro-Natur Biomarkt GmbH.mdf";
 
+        // SQL connection to database, connection stuff to be moved to a separate class later
+        private SqlConnection databaseConnection = new SqlConnection(@"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename=D:\PinkPixl\source\ProNatur-Biomarkt GmbH\Pro-Natur Biomarkt GmbH.mdf;Integrated Security = True; Connect Timeout = 30");
+        
+        // Id(db) of the last selected product in the DataGridView
         private int lastSelectedProductKey;
-
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProductsScreen"/> class.
@@ -38,10 +41,19 @@ namespace ProNatur_Biomarkt_GmbH
         {
             InitializeComponent();
             ShowProducts();
+            ShowDbPath();
         }
 
         /// <summary>
-        /// Handles the click event of the save button to save the product details.
+        /// Displays the path to the database in the text box.
+        /// </summary>
+        private void ShowDbPath()
+        {
+            textBoxDbPath.Text = databasePath;  
+        }
+
+        /// <summary>
+        /// Handles the click event of the save button to save the product to the database.
         /// </summary>
         /// <param name="sender">The object that raised the event.</param>
         /// <param name="e">The event arguments.</param>
@@ -72,7 +84,7 @@ namespace ProNatur_Biomarkt_GmbH
         {
             if (lastSelectedProductKey == 0) // No product selected, so we can't delete anything
             {
-                MessageBox.Show("Bitte wählen Sie ein Produkt aus, das Sie löschen möchten.");
+                MessageBox.Show("Bitte zu editierendes Produkt auswählen.");
                 return;
             }
             // get values from text boxes and combo boxes
@@ -151,7 +163,7 @@ namespace ProNatur_Biomarkt_GmbH
         }
 
         /// <summary>
-        /// Clears all text boxes and combo boxes on the form.
+        /// Clears all input fields.
         /// </summary>
         /// <param name="sender">The object that raised the event.</param>
         /// <param name="e">The event arguments.</param>
@@ -165,7 +177,7 @@ namespace ProNatur_Biomarkt_GmbH
         }
 
         /// <summary>
-        /// Validates the input fields to check if any field is empty.
+        /// Validates the input fields to ensure that they are not empty.
         /// </summary>
         private void ValidateInput()
         {
@@ -186,10 +198,12 @@ namespace ProNatur_Biomarkt_GmbH
         /// <param name="e">The event arguments.</param>
         private void productsDGV_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            // MultiSelect is disabled and FullRowSelect is enabled in the designer,
-            // so we can safely assume that the first selected row is the one we want to edit.
-            // ReadOnly is enabled for all columns in the designer, so we can safely assume
-            // that the user can't edit the data in the DGV.
+        /*   Designer settings;
+             MultiSelect is disabled and FullRowSelect is enabled in the designer,
+             so we can safely assume that the first selected row is the one we want to edit.
+             ReadOnly is enabled for all columns in the designer, so we can safely assume
+             that the user can't edit the data in the DGV.
+        */
 
             // Populate the text boxes and combo boxes with the selected product details
             textBoxProductName.Text = productsDGV.SelectedRows[0].Cells[1].Value.ToString();
